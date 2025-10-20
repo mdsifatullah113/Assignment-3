@@ -1,46 +1,67 @@
 #include <stdio.h>
 
-int main()
+int calculateTotal(int marks[], int size)
 {
-    int marks[3][3] = {{50, 60, 70}, {80, 90, 100}, {30, 40, 50}};
-    char names[3][10] = {"Ali", "Bob", "Cat"};
-    int i, j, total;
-    float average;
+    int total = 0;
+    for (int i = 0; i < size; i++)
+        total += marks[i];
+    return total;
+}
 
-    for (i = 0; i < 3; i++)
+float calculateAverage(int total, int size)
+{
+    return total / (float)size;
+}
+
+char getGrade(float average)
+{
+    if (average >= 80)
+        return 'A';
+    if (average >= 60)
+        return 'B';
+    if (average >= 40)
+        return 'C';
+    return 'F';
+}
+
+int findTopper(int marks[3][3])
+{
+    int maxTotal = 0, topperIndex = 0;
+    for (int i = 0; i < 3; i++)
     {
-        total = 0;
-        for (j = 0; j < 3; j++)
-        {
-            total += marks[i][j];
-        }
-        average = total / 3.0;
-
-        if (average >= 80)
-            printf("%s Grade A avg=%.2f\n", names[i], average);
-        else if (average >= 60)
-            printf("%s Grade B avg=%.2f\n", names[i], average);
-        else if (average >= 40)
-            printf("%s Grade C avg=%.2f\n", names[i], average);
-        else
-            printf("%s Fail avg=%.2f\n", names[i], average);
-    }
-
-    int maxTotal = 0, top = 0;
-    for (i = 0; i < 3; i++)
-    {
-        total = 0;
-        for (j = 0; j < 3; j++)
-        {
-            total += marks[i][j];
-        }
+        int total = calculateTotal(marks[i], 3);
         if (total > maxTotal)
         {
             maxTotal = total;
-            top = i;
+            topperIndex = i;
         }
     }
+    return topperIndex;
+}
 
-    printf("Topper: %s with total %d\n", names[top], maxTotal);
+int main()
+{
+    int marks[3][3] = {
+        {50, 60, 70},
+        {80, 90, 100},
+        {30, 40, 50}};
+    char names[3][10] = {"Ali", "Bob", "Cat"};
+
+    for (int i = 0; i < 3; i++)
+    {
+        int total = calculateTotal(marks[i], 3);
+        float average = calculateAverage(total, 3);
+        char grade = getGrade(average);
+
+        if (grade != 'F')
+            printf("%s Grade %c average=%.2f\n", names[i], grade, average);
+        else
+            printf("%s Fail average=%.2f\n", names[i], average);
+    }
+
+    int topperIndex = findTopper(marks);
+    int topperTotal = calculateTotal(marks[topperIndex], 3);
+    printf("Topper: %s with total %d\n", names[topperIndex], topperTotal);
+
     return 0;
 }
